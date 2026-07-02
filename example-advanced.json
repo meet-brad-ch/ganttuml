@@ -1,0 +1,64 @@
+{
+  "project": {
+    "title": "Q3 Feature Delivery",
+    "version": "1.0",
+    "start": "2026-06-22",
+    "output": "example-advanced.puml",
+
+    "show_critical": true,
+    "show_today": true,
+    "show_footer": true,
+    "weekend_color": "#EFEFEF",
+    "today_color": "#4F9BFF40",
+    "undone_color": "#DDDDDD",
+    "bar_color": "#8ABBED",
+    "critical_color": "#E8473F",
+    "arrow_color": "#B0B7C3",
+    "header_color": "#DCE9F8",
+
+    "jira_base_url": "https://your-company.atlassian.net",
+    "holidays": [
+      {"date": "2026-07-03", "label": "Independence Day (obs)", "show_marker": true},
+      {"date": "2026-06-19", "label": "Juneteenth", "enabled": false}
+    ]
+  },
+
+  "developers": [
+    {
+      "name": "Alice",
+      "pto": ["2026-06-25"],
+      "items": [
+        {"type": "task", "id": "api_schema", "name": "Design API schema", "days": 3, "done": 100, "jira": "PROJ-101"},
+        {"type": "milestone", "id": "design_review", "name": "Design review", "on": "2026-06-24"},
+        {"type": "task", "id": "api_impl", "name": "Implement API", "days": 4, "done": 50},
+        {"type": "milestone", "id": "api_done", "name": "API frozen", "depends_on": "api_impl"}
+      ]
+    },
+    {
+      "name": "Bob",
+      "works_on": ["2026-06-28"],
+      "items": [
+        {"type": "task", "id": "ui_scaffold", "name": "Scaffold UI", "days": 2, "done": 100,
+         "jira": "PROJ-110", "url": "https://example.com/ui-spec"},
+        {"type": "task", "id": "ui_wire", "name": "Wire UI to API", "days": 5, "done": 30,
+         "depends_on": "api_schema"},
+        {"type": "task", "id": "ui_polish", "name": "UI polish", "days": 2, "done": 0,
+         "color": "#00AA00"}
+      ]
+    },
+    {
+      "name": "Carol",
+      "pto": ["2026-07-06", "2026-07-07"],
+      "items": [
+        {"type": "task", "id": "qa_plan", "name": "Write test plan", "days": 2, "done": 60,
+         "start": "2026-07-01"},
+        {"type": "task", "id": "qa_run", "name": "Run regression suite", "days": 4, "done": 0,
+         "depends_on": ["ui_wire", "api_done"], "jira": "PROJ-131"}
+      ]
+    }
+  ],
+
+  "global_milestones": [
+    {"type": "milestone", "id": "release", "name": "v1.0 Release", "depends_on": ["qa_run", "ui_polish"]}
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "project": {
+    "title": "Sprint Plan",
+    "start": "2026-06-22",
+    "output": "example.puml"
+  },
+
+  "developers": [
+    {
+      "name": "Alice",
+      "items": [
+        {"type": "task", "id": "design", "name": "Design the feature", "days": 3, "done": 100},
+        {"type": "task", "id": "build", "name": "Build it", "days": 4, "done": 40}
+      ]
+    },
+    {
+      "name": "Bob",
+      "items": [
+        {"type": "task", "id": "test_env", "name": "Prepare test environment", "days": 2, "done": 100},
+        {"type": "task", "id": "test", "name": "Test the feature", "days": 3, "done": 0, "depends_on": "build"}
+      ]
+    }
+  ],
+
+  "global_milestones": [
+    {"type": "milestone", "id": "ship", "name": "Ship it", "depends_on": "test"}
+  ]
+}

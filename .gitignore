@@ -1,0 +1,12 @@
+# Generated PlantUML artifacts (regenerate with: python3 ganttuml.py --input <file>.json)
+output/
+
+# Python bytecode cache
+__pycache__/
+*.pyc
+
+# Test / lint tool caches
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
