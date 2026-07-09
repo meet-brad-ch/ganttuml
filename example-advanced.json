@@ -4,7 +4,6 @@
     "version": "1.0",
     "start": "2026-06-22",
     "output": "example-advanced.puml",
-
     "show_critical": true,
     "show_today": true,
     "show_footer": true,
@@ -15,50 +14,250 @@
     "critical_color": "#E8473F",
     "arrow_color": "#B0B7C3",
     "header_color": "#DCE9F8",
-
     "jira_base_url": "https://your-company.atlassian.net",
     "holidays": [
-      {"date": "2026-07-03", "label": "Independence Day (obs)", "show_marker": true},
-      {"date": "2026-06-19", "label": "Juneteenth", "enabled": false}
+      {
+        "date": "2026-07-03",
+        "label": "Independence Day (obs)",
+        "show_marker": true
+      },
+      {
+        "date": "2026-07-17",
+        "label": "Company Summer Day",
+        "show_marker": true
+      },
+      {
+        "date": "2026-06-19",
+        "label": "Juneteenth",
+        "enabled": false
+      }
     ]
   },
-
   "developers": [
     {
       "name": "Alice",
-      "pto": ["2026-06-25"],
+      "pto": [
+        "2026-06-25",
+        "2026-07-20",
+        "2026-07-21",
+        "2026-07-22"
+      ],
       "items": [
-        {"type": "task", "id": "api_schema", "name": "Design API schema", "days": 3, "done": 100, "jira": "PROJ-101"},
-        {"type": "milestone", "id": "design_review", "name": "Design review", "on": "2026-06-24"},
-        {"type": "task", "id": "api_impl", "name": "Implement API", "days": 4, "done": 50},
-        {"type": "milestone", "id": "api_done", "name": "API frozen", "depends_on": "api_impl"}
+        {
+          "type": "task",
+          "id": "api_schema",
+          "name": "Design API schema",
+          "days": 3,
+          "done": 100,
+          "jira": "PROJ-101"
+        },
+        {
+          "type": "milestone",
+          "id": "design_review",
+          "name": "Design review",
+          "on": "2026-06-24"
+        },
+        {
+          "type": "task",
+          "id": "api_impl",
+          "name": "Implement API",
+          "days": 4,
+          "done": 50
+        },
+        {
+          "type": "milestone",
+          "id": "api_done",
+          "name": "API frozen",
+          "depends_on": "api_impl"
+        },
+        {
+          "type": "task",
+          "id": "api_hardening",
+          "name": "API error handling & retries",
+          "days": 3,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "api_v2_design",
+          "name": "Design v1.1 API extensions",
+          "days": 3,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "api_v2_impl",
+          "name": "Implement v1.1 API",
+          "days": 4,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "tech_debt",
+          "name": "Pay down tech debt",
+          "days": 2,
+          "done": 0
+        }
       ]
     },
     {
       "name": "Bob",
-      "works_on": ["2026-06-28"],
+      "pto": [
+        "2026-07-27",
+        "2026-07-28"
+      ],
+      "works_on": [
+        "2026-06-28"
+      ],
       "items": [
-        {"type": "task", "id": "ui_scaffold", "name": "Scaffold UI", "days": 2, "done": 100,
-         "jira": "PROJ-110", "url": "https://example.com/ui-spec"},
-        {"type": "task", "id": "ui_wire", "name": "Wire UI to API", "days": 5, "done": 30,
-         "depends_on": "api_schema"},
-        {"type": "task", "id": "ui_polish", "name": "UI polish", "days": 2, "done": 0,
-         "color": "#00AA00"}
+        {
+          "type": "task",
+          "id": "ui_scaffold",
+          "name": "Scaffold UI",
+          "days": 2,
+          "done": 100,
+          "jira": "PROJ-110",
+          "url": "https://example.com/ui-spec"
+        },
+        {
+          "type": "task",
+          "id": "ui_wire",
+          "name": "Wire UI to API",
+          "days": 5,
+          "done": 30,
+          "depends_on": "api_schema"
+        },
+        {
+          "type": "task",
+          "id": "ui_polish",
+          "name": "UI polish",
+          "days": 2,
+          "done": 0,
+          "color": "#00AA00"
+        },
+        {
+          "type": "task",
+          "id": "a11y_pass",
+          "name": "Accessibility pass",
+          "days": 2,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "ui_darkmode",
+          "name": "Dark mode theme",
+          "days": 3,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "ui_i18n",
+          "name": "Internationalization",
+          "days": 4,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "ui_v2_wire",
+          "name": "Wire UI to v1.1 API",
+          "days": 3,
+          "done": 0,
+          "depends_on": "api_v2_impl"
+        },
+        {
+          "type": "task",
+          "id": "ui_perf",
+          "name": "UI performance tuning",
+          "days": 2,
+          "done": 0
+        }
       ]
     },
     {
       "name": "Carol",
-      "pto": ["2026-07-06", "2026-07-07"],
+      "pto": [
+        "2026-07-06",
+        "2026-07-07",
+        "2026-07-16"
+      ],
       "items": [
-        {"type": "task", "id": "qa_plan", "name": "Write test plan", "days": 2, "done": 60,
-         "start": "2026-07-01"},
-        {"type": "task", "id": "qa_run", "name": "Run regression suite", "days": 4, "done": 0,
-         "depends_on": ["ui_wire", "api_done"], "jira": "PROJ-131"}
+        {
+          "type": "task",
+          "id": "qa_env",
+          "name": "Set up QA environment",
+          "days": 2,
+          "done": 100
+        },
+        {
+          "type": "task",
+          "id": "qa_plan",
+          "name": "Write test plan",
+          "days": 2,
+          "done": 60,
+          "start": "2026-07-01"
+        },
+        {
+          "type": "task",
+          "id": "qa_run",
+          "name": "Run regression suite",
+          "days": 4,
+          "done": 0,
+          "depends_on": [
+            "ui_wire",
+            "api_done"
+          ],
+          "jira": "PROJ-131"
+        },
+        {
+          "type": "milestone",
+          "id": "qa_signoff",
+          "name": "QA sign-off",
+          "depends_on": "qa_run"
+        },
+        {
+          "type": "task",
+          "id": "qa_automation",
+          "name": "Automate regression suite",
+          "days": 4,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "qa_v2_plan",
+          "name": "Write v1.1 test plan",
+          "days": 2,
+          "done": 0
+        },
+        {
+          "type": "task",
+          "id": "qa_v2_run",
+          "name": "Run v1.1 regression",
+          "days": 3,
+          "done": 0,
+          "depends_on": "ui_v2_wire"
+        }
       ]
     }
   ],
-
   "global_milestones": [
-    {"type": "milestone", "id": "release", "name": "v1.0 Release", "depends_on": ["qa_run", "ui_polish"]}
+    {
+      "type": "milestone",
+      "id": "release",
+      "name": "v1.0 Release",
+      "depends_on": [
+        "qa_run",
+        "api_hardening"
+      ]
+    },
+    {
+      "type": "milestone",
+      "id": "release_v2",
+      "name": "v1.1 Release",
+      "depends_on": [
+        "qa_v2_run",
+        "ui_perf",
+        "tech_debt"
+      ]
+    }
   ]
 }

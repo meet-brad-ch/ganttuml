@@ -164,11 +164,11 @@ milestone that lands on a closed day.
   ![Minimal example Gantt chart](docs/example.png)
 
 - **`example-advanced.json`** — exercises **every** feature (all but `show_footer: false`):
-  both milestone modes (`on` and `depends_on`,
-  single and list), `jira` + `url` links (one item carries both — `url` wins), an ignored `color`
-  field, PTO, `works_on`, a disabled holiday, a `start` floor, the critical path, and every
-  appearance option set explicitly. The chart at the top of this README is its render
-  ([docs/example-advanced.png](docs/example-advanced.png)).
+  both milestone modes (`on` and `depends_on`, single and list), `jira` + `url` links (one item
+  carries both — `url` wins), an ignored `color` field, PTO, `works_on`, a disabled holiday, a
+  `start` floor, the critical path, and every appearance option set explicitly. Its render:
+
+  ![Advanced example Gantt chart](docs/example-advanced.png)
 
 ## Development
 The tool itself has **no runtime dependencies**; the test suite uses pytest (dev-only):

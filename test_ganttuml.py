@@ -739,6 +739,11 @@ hide resources names
 2026-07-05 is colored in #EFEFEF
 2026-07-11 is colored in #EFEFEF
 2026-07-12 is colored in #EFEFEF
+2026-07-17 is colored in #EFEFEF
+2026-07-18 is colored in #EFEFEF
+2026-07-19 is colored in #EFEFEF
+2026-07-25 is colored in #EFEFEF
+2026-07-26 is colored in #EFEFEF
 2026-07-02 is colored in #4F9BFF40
 
 ' ---- Per-person off: weekends + holidays + PTO (minus works_on) ----
@@ -750,12 +755,27 @@ hide resources names
 {Alice} is off on 2026-07-05
 {Alice} is off on 2026-07-11
 {Alice} is off on 2026-07-12
+{Alice} is off on 2026-07-17
+{Alice} is off on 2026-07-18
+{Alice} is off on 2026-07-19
+{Alice} is off on 2026-07-20
+{Alice} is off on 2026-07-21
+{Alice} is off on 2026-07-22
+{Alice} is off on 2026-07-25
+{Alice} is off on 2026-07-26
 {Bob} is off on 2026-06-27
 {Bob} is off on 2026-07-03
 {Bob} is off on 2026-07-04
 {Bob} is off on 2026-07-05
 {Bob} is off on 2026-07-11
 {Bob} is off on 2026-07-12
+{Bob} is off on 2026-07-17
+{Bob} is off on 2026-07-18
+{Bob} is off on 2026-07-19
+{Bob} is off on 2026-07-25
+{Bob} is off on 2026-07-26
+{Bob} is off on 2026-07-27
+{Bob} is off on 2026-07-28
 {Carol} is off on 2026-06-27
 {Carol} is off on 2026-06-28
 {Carol} is off on 2026-07-03
@@ -765,9 +785,16 @@ hide resources names
 {Carol} is off on 2026-07-07
 {Carol} is off on 2026-07-11
 {Carol} is off on 2026-07-12
+{Carol} is off on 2026-07-16
+{Carol} is off on 2026-07-17
+{Carol} is off on 2026-07-18
+{Carol} is off on 2026-07-19
+{Carol} is off on 2026-07-25
+{Carol} is off on 2026-07-26
 
 -- Holidays --
 [Independence Day (obs)] happens 2026-07-03
+[Company Summer Day] happens 2026-07-17
 
 -- Alice --
 [Design API schema] as [api_schema] on {Alice} requires 3 days
@@ -778,6 +805,18 @@ hide resources names
 [Implement API] as [api_impl] on {Alice} requires 4 days
 [api_impl] is colored in #8ABBED
 [api_impl] is 50% completed
+[API error handling & retries] as [api_hardening] on {Alice} requires 3 days
+[api_hardening] is colored in #8ABBED
+[api_hardening] is 0% completed
+[Design v1.1 API extensions] as [api_v2_design] on {Alice} requires 3 days
+[api_v2_design] is colored in #8ABBED
+[api_v2_design] is 0% completed
+[Implement v1.1 API] as [api_v2_impl] on {Alice} requires 4 days
+[api_v2_impl] is colored in #8ABBED
+[api_v2_impl] is 0% completed
+[Pay down tech debt] as [tech_debt] on {Alice} requires 2 days
+[tech_debt] is colored in #8ABBED
+[tech_debt] is 0% completed
 
 -- Bob --
 [Scaffold UI] as [ui_scaffold] on {Bob} requires 2 days
@@ -790,8 +829,26 @@ hide resources names
 [UI polish] as [ui_polish] on {Bob} requires 2 days
 [ui_polish] is colored in #8ABBED
 [ui_polish] is 0% completed
+[Accessibility pass] as [a11y_pass] on {Bob} requires 2 days
+[a11y_pass] is colored in #8ABBED
+[a11y_pass] is 0% completed
+[Dark mode theme] as [ui_darkmode] on {Bob} requires 3 days
+[ui_darkmode] is colored in #8ABBED
+[ui_darkmode] is 0% completed
+[Internationalization] as [ui_i18n] on {Bob} requires 4 days
+[ui_i18n] is colored in #8ABBED
+[ui_i18n] is 0% completed
+[Wire UI to v1.1 API] as [ui_v2_wire] on {Bob} requires 3 days
+[ui_v2_wire] is colored in #8ABBED
+[ui_v2_wire] is 0% completed
+[UI performance tuning] as [ui_perf] on {Bob} requires 2 days
+[ui_perf] is colored in #8ABBED
+[ui_perf] is 0% completed
 
 -- Carol --
+[Set up QA environment] as [qa_env] on {Carol} requires 2 days
+[qa_env] is colored in #8ABBED
+[qa_env] is 100% completed
 [Write test plan] as [qa_plan] on {Carol} requires 2 days
 [qa_plan] starts 2026-07-01
 [qa_plan] is colored in #E8473F
@@ -800,21 +857,49 @@ hide resources names
 [qa_run] is colored in #E8473F
 [qa_run] is 0% completed
 [qa_run] links to [[https://your-company.atlassian.net/browse/PROJ-131]]
+[Automate regression suite] as [qa_automation] on {Carol} requires 4 days
+[qa_automation] is colored in #E8473F
+[qa_automation] is 0% completed
+[Write v1.1 test plan] as [qa_v2_plan] on {Carol} requires 2 days
+[qa_v2_plan] is colored in #E8473F
+[qa_v2_plan] is 0% completed
+[Run v1.1 regression] as [qa_v2_run] on {Carol} requires 3 days
+[qa_v2_run] is colored in #E8473F
+[qa_v2_run] is 0% completed
 
 ' ---- dependencies (sources declared above) ----
 [api_schema] -> [api_impl]
+[api_impl] -> [api_hardening]
+[api_hardening] -> [api_v2_design]
+[api_v2_design] -> [api_v2_impl]
+[api_v2_impl] -> [tech_debt]
 [api_schema] -> [ui_wire]
 [ui_scaffold] -> [ui_wire]
 [ui_wire] -> [ui_polish]
+[ui_polish] -> [a11y_pass]
+[a11y_pass] -> [ui_darkmode]
+[ui_darkmode] -> [ui_i18n]
+[api_v2_impl] -> [ui_v2_wire]
+[ui_i18n] -> [ui_v2_wire]
+[ui_v2_wire] -> [ui_perf]
+[qa_env] -> [qa_plan]
 [ui_wire] -> [qa_run]
 [qa_plan] -[#E8473F]-> [qa_run]
+[qa_run] -[#E8473F]-> [qa_automation]
+[qa_automation] -[#E8473F]-> [qa_v2_plan]
+[ui_v2_wire] -> [qa_v2_run]
+[qa_v2_plan] -[#E8473F]-> [qa_v2_run]
 
 -- Milestones --
 [API frozen] as [api_done] happens at [api_impl]'s end
 [api_done] -> [qa_run]
+[QA sign-off] as [qa_signoff] happens at [qa_run]'s end
 [v1.0 Release] as [release] happens at [qa_run]'s end
-[release] happens at [ui_polish]'s end
-[release] is colored in #E8473F
+[release] happens at [api_hardening]'s end
+[v1.1 Release] as [release_v2] happens at [qa_v2_run]'s end
+[release_v2] happens at [ui_perf]'s end
+[release_v2] happens at [tech_debt]'s end
+[release_v2] is colored in #E8473F
 
 @endgantt
 """
