@@ -184,19 +184,20 @@ def _topo_order(edges: dict[str, list[str]]) -> list[str]:
 # Allowed keys per object level. Any other key is rejected — fail fast on typos — except
 # keys starting with "_" (the JSON comment convention) and `color`, which is documented
 # as accepted-but-ignored (bars always use the uniform theme).
-_TOP_KEYS = {"project", "developers", "global_milestones"}
+_TOP_KEYS = {"project", "developers", "global_milestones", "groups"}
 _PROJECT_KEYS = {"title", "start", "output", "version", "show_footer", "show_today",
                  "show_critical", "weekend_color", "today_color", "undone_color",
                  "bar_color", "critical_color", "arrow_color", "header_color",
-                 "jira_base_url", "holidays"}
+                 "group_color", "jira_base_url", "holidays"}
 _DEV_KEYS = {"name", "pto", "works_on", "items", "color"}
 _TASK_KEYS = {"type", "id", "name", "days", "done", "depends_on", "start", "jira", "url", "color"}
 _MILESTONE_KEYS = {"type", "id", "name", "on", "depends_on", "jira", "url", "color"}
 _HOLIDAY_KEYS = {"date", "label", "show_marker", "enabled"}
+_GROUP_KEYS = {"name", "tasks"}
 
 _PROJECT_STR_KEYS = ("title", "start", "output", "version", "jira_base_url", "weekend_color",
                      "today_color", "undone_color", "bar_color", "critical_color",
-                     "arrow_color", "header_color")
+                     "arrow_color", "header_color", "group_color")
 _PROJECT_BOOL_KEYS = ("show_footer", "show_today", "show_critical")
 
 
@@ -263,6 +264,16 @@ def _check_structure(src) -> None:
     _check_list(src.get("global_milestones"), "global_milestones")
     for ms in src.get("global_milestones") or []:
         _check_item(ms, "global/")
+    _check_list(src.get("groups"), "groups")
+    for i, g in enumerate(src.get("groups") or []):
+        where = f"groups[{i}]"
+        _check_obj(g, where)
+        _check_keys(g, _GROUP_KEYS, where)
+        if not isinstance(g.get("name"), str) or not g.get("name"):
+            raise SourceError(f"{where}: group needs a non-empty string 'name'")
+        tasks = g.get("tasks")
+        if not isinstance(tasks, list) or not tasks or not all(isinstance(t, str) for t in tasks):
+            raise SourceError(f"{where} ({g['name']}): 'tasks' must be a non-empty list of ids")
 
 
 def _check_item(it, where: str) -> None:
@@ -338,6 +349,24 @@ def validate(src: dict) -> None:
             # `done`/`start` on a milestone are rejected by the unknown-key structure pass
         for d in dev.get("pto", []) if dev else []:
             _date(d, f"{dev['name']} pto")
+
+    # groups (phases): member ids must exist, group names must be unique, and an id may
+    # belong to at most one group. Synthetic __group_ ids are reserved for the emitter.
+    for iid in ids:
+        if iid.startswith("__group_"):
+            raise SourceError(f"{iid}: ids starting with '__group_' are reserved for groups")
+    group_names: set[str] = set()
+    grouped: dict[str, str] = {}  # member id -> group name
+    for g in src.get("groups", []):
+        if g["name"] in group_names:
+            raise SourceError(f"duplicate group name {g['name']!r}")
+        group_names.add(g["name"])
+        for t in g["tasks"]:
+            if t not in ids:
+                raise SourceError(f"group {g['name']!r}: unknown id {t!r}")
+            if t in grouped:
+                raise SourceError(f"{t!r} is in two groups: {grouped[t]!r} and {g['name']!r}")
+            grouped[t] = g["name"]
 
     # works_on: dates a developer works despite a normal closure. Must parse, must not
     # also be PTO, and must actually BE a closed day — a no-op works_on is almost
@@ -591,6 +620,7 @@ def emit(src: dict) -> str:
 
     _emit_header(w, p)
     _emit_calendar(w, src, p, sched, start)
+    _emit_groups(w, src, p, sched)
     _emit_definitions(w, src, crit_ids, bar_color, crit_color)
     _emit_positioning(w, src, item_by_id, edges, crit_ids, crit_edges, crit_color)
 
@@ -675,6 +705,52 @@ def _emit_calendar(w, src, p, sched, start):
         for h in markers:
             w(f"[{h['label']}] happens {h['date']}")
         w("")
+
+
+def _group_span(sched, group):
+    """(first start, last end) over the group's member items."""
+    spans = [sched[t] for t in group["tasks"]]
+    return min(s for (s, _e, _d, _t) in spans), max(e for (_s, e, _d, _t) in spans)
+
+
+# Phase-label centering: PlantUML always left-aligns bar labels and offers no alignment
+# style, so the label is centered by prefixing EM SPACEs computed from rough pixel widths.
+_DAY_PX = 17      # ~width of one day column
+_CHAR_PX = 7      # ~width of one bold label character
+_EMSPACE_PX = 12  # ~width of U+2003 EM SPACE
+
+
+def _center_pad(name: str, days: int) -> str:
+    """EM-SPACE prefix that visually centers `name` in a `days`-wide bar."""
+    pad = round((days * _DAY_PX - len(name) * _CHAR_PX) / (2 * _EMSPACE_PX))
+    return "\u2003" * max(1, pad)
+
+
+def _emit_groups(w, src, p, sched):
+    """Phase band: one hollow summary bar per group with hollow diamond end-caps and a
+    bold, centered label — the closest PlantUML gets to MS-Project summary tasks.
+
+    PlantUML has no native grouping, so each group is approximated by a bar with
+    absolute dates (known from schedule()), declared before the developer lanes so the
+    band sits on top; blank-named milestones on the same row form the end-caps.
+    Cosmetic only: no arrows, no links, never on the critical path."""
+    groups = src.get("groups", [])
+    if not groups:
+        return
+    color = p.get("group_color", "#3B3B3B")
+    fill = color if "/" in color else f"#FFFFFF/{color}"  # bare color = border of hollow bar
+    w("-- Phases --")
+    for n, g in enumerate(groups):
+        gs, ge = _group_span(sched, g)
+        days = (ge - gs).days + 1
+        w(f"[{_center_pad(g['name'], days)}**{g['name']}**] as [__group_{n}] "
+          f"starts {gs} and ends {ge}")
+        w(f"[__group_{n}] is colored in {fill}")
+        for cap, d in ((f"__group_{n}s", gs), (f"__group_{n}e", ge)):
+            w(f"[ ] as [{cap}] happens {d}")
+            w(f"[{cap}] displays on same row as [__group_{n}]")
+            w(f"[{cap}] is colored in {fill}")
+    w("")
 
 
 def _emit_definitions(w, src, crit_ids, bar_color, crit_color):
@@ -797,6 +873,9 @@ def report(src: dict) -> None:
         print(f"  {s}  {tag:24} {dev or '-':8} {iid}{pct}{crit}")
         if typ == "milestone" and not cal.is_open(s, dev):
             print(f"      ! note: milestone {iid} lands on a closed day ({s})")
+    for g in src.get("groups", []):
+        gs, ge = _group_span(sched, g)
+        print(f"group:    {gs} -> {ge}  {g['name']}")
     tasks = [v for v in sched.values() if v[3] == "task"]
     if tasks:
         print(f"makespan: {max(tasks, key=lambda v: v[1])[1]}")

@@ -81,6 +81,20 @@ For a cross-team gate not owned by any developer (release, roll-up), put it in t
 ]
 ```
 
+## Group tasks into phases (summary bars)
+Add a top-level `groups` array: each group renders as a **hollow summary bar with diamond
+end-caps** (bold name centered in the bar) in a "Phases" band above the developer lanes, spanning
+the first start → last end of its member items (which may belong to different developers).
+Cosmetic only — grouping never changes the schedule. Each id may be in at most one group; tune
+the outline with `"group_color"` in `project` (default `#3B3B3B`; a `fill/border` pair such as
+`#DEEBF7/#2E75B6` gives a tinted bar instead).
+```jsonc
+"groups": [
+  { "name": "Phase v1.0", "tasks": ["api_schema", "api_impl", "qa_run"] },
+  { "name": "Phase v1.1", "tasks": ["api_v2_impl", "qa_v2_run"] }
+]
+```
+
 ## Add a person's PTO / vacation
 Add the dates to that developer's `pto` list. Only that person is off; their tasks skip those days.
 ```jsonc
@@ -189,7 +203,8 @@ references an unknown id or itself; a cyclic dependency; an unparseable date; a 
 exactly one of `on` / `depends_on`; a `works_on` date that isn't actually a closed day (almost
 always a typo); a date in both `works_on` and `pto` for one developer; a non-milestone in
 `global_milestones`; a duplicate holiday date; a holiday missing `date` (or `show_marker` without
-a `label`); a `project.output` that isn't a plain filename; or a calendar so over-constrained
+a `label`); a group naming an unknown id, an id in two groups, or a duplicate group name;
+a `project.output` that isn't a plain filename; or a calendar so over-constrained
 that no working day exists within 10 years.
 
 See **README.md** for the full schema and the

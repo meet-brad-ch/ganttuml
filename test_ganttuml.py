@@ -232,6 +232,19 @@ STRUCTURE_CASES = [
     (with_item(task("t", url=5)), "Alice/t: 'url' must be a string"),
     ({**base(), "global_milestones": "x"}, "global_milestones must be a list"),
     ({**base(), "global_milestones": ["x"]}, "global/item must be an object"),
+    ({**base(), "groups": "x"}, "groups must be a list"),
+    ({**base(), "groups": ["x"]}, "groups[0] must be an object"),
+    ({**base(), "groups": [{"name": "G", "tasks": ["t"], "colour": 1}]},
+     "groups[0]: unknown key(s) 'colour'"),
+    ({**base(), "groups": [{"tasks": ["t"]}]}, "group needs a non-empty string 'name'"),
+    ({**base(), "groups": [{"name": "", "tasks": ["t"]}]},
+     "group needs a non-empty string 'name'"),
+    ({**base(), "groups": [{"name": "G"}]}, "'tasks' must be a non-empty list of ids"),
+    ({**base(), "groups": [{"name": "G", "tasks": []}]},
+     "'tasks' must be a non-empty list of ids"),
+    ({**base(), "groups": [{"name": "G", "tasks": [1]}]},
+     "'tasks' must be a non-empty list of ids"),
+    (base(group_color=5), "project.group_color must be a string"),
 ]
 
 
@@ -247,6 +260,7 @@ def test_underscore_keys_are_comments_everywhere():
                     "holidays": [{"_c": 1, "date": "2026-07-03", "label": "X"}]},
         "developers": [{"_c": 1, **dev(items=[{**task("t"), "_why": "x"}])}],
         "global_milestones": [{**ms("m", depends_on="t"), "_c": 1}],
+        "groups": [{"_c": "phase", "name": "G", "tasks": ["t"]}],
     }
     validate(src)  # must not raise
 
@@ -297,6 +311,15 @@ SEMANTIC_CASES = [
     (with_item(task("t", depends_on="ghost")), "references unknown id 'ghost'"),
     (with_dev(dev(items=[task("a", depends_on="b"), ms("b", depends_on="a")])),
      "cyclic dependency:"),
+    ({**with_item(task("t")), "groups": [{"name": "G", "tasks": ["ghost"]}]},
+     "group 'G': unknown id 'ghost'"),
+    ({**with_item(task("t")), "groups": [{"name": "G", "tasks": ["t"]},
+                                         {"name": "G", "tasks": ["t"]}]},
+     "duplicate group name 'G'"),
+    ({**with_item(task("t")), "groups": [{"name": "A", "tasks": ["t"]},
+                                         {"name": "B", "tasks": ["t"]}]},
+     "'t' is in two groups: 'A' and 'B'"),
+    (with_item(task("__group_0")), "reserved for groups"),
 ]
 
 
@@ -604,6 +627,50 @@ def test_emit_milestone_multi_dep_and_link(frozen_today):
     assert "[m] links to [[https://x.example/browse/P-9]]" in out
 
 
+def test_emit_groups_phase_band(frozen_today):
+    src = {**base(), "developers": [
+        dev("A", [task("a", days=3), task("a2", days=2)]),
+        dev("B", [task("b", days=5)]),
+    ], "groups": [{"name": "Phase One", "tasks": ["a", "b"]},
+                  {"name": "Phase Two", "tasks": ["a2"]}]}
+    out = emit(src)
+    band = out.split("-- Phases --")[1].split("-- A --")[0]
+    # hollow bar, bold label centered by em-space padding, absolute dates
+    assert "**Phase One**] as [__group_0] starts 2026-06-22 and ends 2026-06-26" in band
+    assert "**Phase Two**] as [__group_1] starts 2026-06-25 and ends 2026-06-26" in band
+    assert " **Phase One**" in band                          # centering pad present
+    assert "[__group_0] is colored in #FFFFFF/#3B3B3B" in band    # hollow default
+    # hollow diamond end-caps share the bar's row
+    assert "[ ] as [__group_0s] happens 2026-06-22" in band
+    assert "[__group_0s] displays on same row as [__group_0]" in band
+    assert "[__group_0e] is colored in #FFFFFF/#3B3B3B" in band
+    assert out.index("-- Phases --") < out.index("-- A --")       # band above the lanes
+    assert "-> [__group_" not in out and "[__group_0] ->" not in out  # no arrows to groups
+    custom = {**src, "project": {**src["project"], "group_color": "#222222"}}
+    assert "[__group_0] is colored in #FFFFFF/#222222" in emit(custom)  # bare = border color
+    pair = {**src, "project": {**src["project"], "group_color": "#DEEBF7/#2E75B6"}}
+    assert "[__group_0] is colored in #DEEBF7/#2E75B6" in emit(pair)    # fill/border verbatim
+
+
+def test_center_pad():
+    assert ganttuml._center_pad("x", 1) == "\u2003"               # never less than one
+    assert ganttuml._center_pad("An extremely long phase label", 2) == "\u2003"
+    short = ganttuml._center_pad("Phase", 8)
+    longer = ganttuml._center_pad("Phase", 20)
+    assert set(short) == {"\u2003"} and len(longer) > len(short)  # wider bar -> more pad
+
+
+def test_emit_no_phase_band_without_groups(frozen_today):
+    assert "-- Phases --" not in emit(with_item(task("t")))
+
+
+def test_report_group_lines(frozen_today, capsys):
+    src = {**with_dev(dev(items=[task("a", days=3)])),
+           "groups": [{"name": "Phase One", "tasks": ["a"]}]}
+    out = run_report(src, capsys)
+    assert "group:    2026-06-22 -> 2026-06-24  Phase One" in out
+
+
 # --------------------------------------------------------------------------- report
 def run_report(src, capsys):
     validate(src)
@@ -795,6 +862,24 @@ hide resources names
 -- Holidays --
 [Independence Day (obs)] happens 2026-07-03
 [Company Summer Day] happens 2026-07-17
+
+-- Phases --
+[             **Phase v1.0**] as [__group_0] starts 2026-06-22 and ends 2026-07-13
+[__group_0] is colored in #FFFFFF/#3B3B3B
+[ ] as [__group_0s] happens 2026-06-22
+[__group_0s] displays on same row as [__group_0]
+[__group_0s] is colored in #FFFFFF/#3B3B3B
+[ ] as [__group_0e] happens 2026-07-13
+[__group_0e] displays on same row as [__group_0]
+[__group_0e] is colored in #FFFFFF/#3B3B3B
+[            **Phase v1.1**] as [__group_1] starts 2026-07-08 and ends 2026-07-28
+[__group_1] is colored in #FFFFFF/#3B3B3B
+[ ] as [__group_1s] happens 2026-07-08
+[__group_1s] displays on same row as [__group_1]
+[__group_1s] is colored in #FFFFFF/#3B3B3B
+[ ] as [__group_1e] happens 2026-07-28
+[__group_1e] displays on same row as [__group_1]
+[__group_1e] is colored in #FFFFFF/#3B3B3B
 
 -- Alice --
 [Design API schema] as [api_schema] on {Alice} requires 3 days

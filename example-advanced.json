@@ -14,6 +14,7 @@
     "critical_color": "#E8473F",
     "arrow_color": "#B0B7C3",
     "header_color": "#DCE9F8",
+    "group_color": "#3B3B3B",
     "jira_base_url": "https://your-company.atlassian.net",
     "holidays": [
       {
@@ -257,6 +258,38 @@
         "qa_v2_run",
         "ui_perf",
         "tech_debt"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "Phase v1.0",
+      "tasks": [
+        "api_schema",
+        "api_impl",
+        "api_hardening",
+        "ui_scaffold",
+        "ui_wire",
+        "ui_polish",
+        "a11y_pass",
+        "qa_env",
+        "qa_plan",
+        "qa_run"
+      ]
+    },
+    {
+      "name": "Phase v1.1",
+      "tasks": [
+        "api_v2_design",
+        "api_v2_impl",
+        "tech_debt",
+        "ui_darkmode",
+        "ui_i18n",
+        "ui_v2_wire",
+        "ui_perf",
+        "qa_automation",
+        "qa_v2_plan",
+        "qa_v2_run"
       ]
     }
   ]

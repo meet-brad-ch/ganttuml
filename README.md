@@ -91,6 +91,9 @@ rendered) go to the **`output/`** subdirectory.
   ],
   "global_milestones": [
     {"type": "milestone", "id": "release", "name": "v1.0 Release", "depends_on": "qa_run"}
+  ],
+  "groups": [
+    {"name": "Phase v1.0", "tasks": ["api_schema", "api_impl"]}   // optional summary bars
   ]
 }
 ```
@@ -109,7 +112,9 @@ rendered) go to the **`output/`** subdirectory.
   thicker outline). **Theme** (all optional): `bar_color` (default `#8ABBED` — the uniform MS-Project
   blue for every non-critical bar), `critical_color` (default `#E8473F` — the red for critical-path
   bars/diamonds/links), `arrow_color` (default `#B0B7C3` — non-critical link arrows), `header_color`
-  (default `#DCE9F8` — the timeline header band), `show_critical` (default `false` — opt in to the
+  (default `#DCE9F8` — the timeline header band), `group_color` (default `#3B3B3B` — outline of
+  the hollow phase/summary bars; accepts a `fill/border` pair for a tinted bar),
+  `show_critical` (default `false` — opt in to the
   red critical-path marking). Plus `jira_base_url`,
   `holidays[]` (each `{date, label, show_marker?, enabled?}`; `enabled:false` → treated as a normal
   working day). Weekends (Sat/Sun) are always non-working.
@@ -121,6 +126,14 @@ rendered) go to the **`output/`** subdirectory.
   developer (e.g. release gates / roll-ups like "RC1 complete"). Same milestone fields as in-lane
   milestones; they render in the trailing "Milestones" lane with no resource. This is the place for
   a cross-team marker that `depends_on` many tasks across developers.
+- **`groups`** — optional MS-Project-style **phases**: each `{name, tasks}` (a unique name and a
+  non-empty list of item ids, which may span developers; an id belongs to at most one group)
+  renders as a **hollow summary bar with diamond end-caps** in a leading "Phases" band, spanning
+  the first start to the last end of its members, with the bold group name centered in the bar.
+  Purely cosmetic — groups never affect scheduling, links, or the critical path. (PlantUML has no
+  native summary tasks; the band is drawn from the computed schedule.) `project.group_color`
+  (default `#3B3B3B`) sets the outline color; a `fill/border` pair like `#DEEBF7/#2E75B6` gives a
+  tinted bar instead of a hollow one.
 
 ### Item fields
 - **task**: `type:"task"`, `id` (unique), `name`, `days` (>=1), `done` (**required** — integer percent
@@ -153,7 +166,8 @@ a `done` that isn't an integer 0–100 (or `done` on a milestone), a milestone t
 exactly one of `on`/`depends_on`, a `works_on` date that isn't actually a closed day (a no-op is
 almost always a typo), a date listed in both `works_on` and `pto`, a non-milestone entry in
 `global_milestones`, a duplicate holiday date, a holiday missing `date` (or `show_marker`
-without a `label`), a `project.output` that isn't a plain filename, or a calendar so
+without a `label`), a group naming an unknown id, an id in two groups, a duplicate group
+name, a `project.output` that isn't a plain filename, or a calendar so
 over-constrained that no working day exists within 10 years. The schedule report also flags any
 milestone that lands on a closed day.
 
@@ -166,7 +180,8 @@ milestone that lands on a closed day.
 - **`example-advanced.json`** — exercises **every** feature (all but `show_footer: false`):
   both milestone modes (`on` and `depends_on`, single and list), `jira` + `url` links (one item
   carries both — `url` wins), an ignored `color` field, PTO, `works_on`, a disabled holiday, a
-  `start` floor, the critical path, and every appearance option set explicitly. Its render:
+  `start` floor, phase groups, the critical path, and every appearance option set explicitly.
+  Its render:
 
   ![Advanced example Gantt chart](docs/example-advanced.png)
 
