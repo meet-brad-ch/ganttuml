@@ -12,7 +12,8 @@ python3 ganttuml.py --input my.json  # just generate the .puml + print the sched
 All artifacts are written to the **`output/`** subdirectory (kept out of git).
 
 The generator never hard-codes dates — it emits dependencies and PlantUML computes the schedule.
-Durations count working days only (weekends + holidays are skipped; 1 week = 7 days). Each person
+Durations (`days`) count that person's working days only (weekends, holidays, and their PTO are
+skipped); there is no weeks unit — express durations in days. Each person
 does one task at a time; a task waits for the later of its lane-predecessor and its dependencies.
 
 ---
@@ -204,6 +205,7 @@ exactly one of `on` / `depends_on`; a `works_on` date that isn't actually a clos
 always a typo); a date in both `works_on` and `pto` for one developer; a non-milestone in
 `global_milestones`; a duplicate holiday date; a holiday missing `date` (or `show_marker` without
 a `label`); a group naming an unknown id, an id in two groups, or a duplicate group name;
+an item id starting with `__group_` (reserved for the emitted phase bars);
 a `project.output` that isn't a plain filename; or a calendar so over-constrained
 that no working day exists within 10 years.
 

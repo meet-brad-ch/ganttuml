@@ -28,8 +28,17 @@ python3 ganttuml.py --input my.json # validate + write output/<output>.puml + pr
 ```
 `render.sh <source.json>` is the reusable generate+render entry point; the per-project `*.sh` files
 are one-line wrappers over it. Bare `python3 ganttuml.py` defaults to `--input example.json`.
+A relative `--input` path resolves against the script's own directory (the repo root), not your
+current directory, so the commands above work from anywhere.
 Output filename comes from `project.output`; artifacts (`.puml`, and `.png`/`.svg`/`.cmapx` once
 rendered) go to the **`output/`** subdirectory.
+
+## Claude Code skill
+The repo ships a [Claude Code](https://claude.com/claude-code) skill at
+`.claude/skills/ganttuml/` — clone the repo, open it in Claude Code, and ask for plan changes
+in plain language ("add a task for Bob after the API work", "who's on the critical path?").
+The skill teaches Claude the edit → validate → report loop and points it at the schema docs;
+type `/ganttuml` to invoke it explicitly.
 
 ## How scheduling works
 - **Developers are lanes.** Each developer's `items` run in the order listed; each task
@@ -167,7 +176,8 @@ exactly one of `on`/`depends_on`, a `works_on` date that isn't actually a closed
 almost always a typo), a date listed in both `works_on` and `pto`, a non-milestone entry in
 `global_milestones`, a duplicate holiday date, a holiday missing `date` (or `show_marker`
 without a `label`), a group naming an unknown id, an id in two groups, a duplicate group
-name, a `project.output` that isn't a plain filename, or a calendar so
+name, an item id starting with `__group_` (reserved for the emitted phase bars),
+a `project.output` that isn't a plain filename, or a calendar so
 over-constrained that no working day exists within 10 years. The schedule report also flags any
 milestone that lands on a closed day.
 
