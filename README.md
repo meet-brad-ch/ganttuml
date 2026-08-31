@@ -1,7 +1,7 @@
 # ganttuml
 
 [![CI](https://github.com/meet-brad-ch/ganttuml/actions/workflows/ci.yml/badge.svg)](https://github.com/meet-brad-ch/ganttuml/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/ganttuml)](https://pypi.org/project/ganttuml/)
+[![PyPI](https://img.shields.io/pypi/v/ganttuml?label=pypi)](https://pypi.org/project/ganttuml/)
 ![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.7%2B-blue)
 ![Runtime dependencies](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen)
