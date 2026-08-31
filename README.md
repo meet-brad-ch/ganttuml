@@ -1,6 +1,7 @@
 # ganttuml
 
 [![CI](https://github.com/meet-brad-ch/ganttuml/actions/workflows/ci.yml/badge.svg)](https://github.com/meet-brad-ch/ganttuml/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/ganttuml)](https://pypi.org/project/ganttuml/)
 ![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.7%2B-blue)
 ![Runtime dependencies](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen)
@@ -9,13 +10,13 @@
 JSON in, Gantt out. You describe developers and their ordered tasks and milestones in one
 JSON file. ganttuml turns that file into a rendered PlantUML Gantt chart (PNG + SVG).
 
-- **One Python file.** The tool uses only the standard library. There is nothing to install with pip.
+- **One Python file.** The tool uses only the standard library. It has zero dependencies.
 - **Runs locally.** Your plan data stays on your machine. The tool never contacts a server.
 - **Tested.** The test suite has 100% coverage. CI enforces that gate on each push.
 - **General purpose.** No Jira is required. An optional per-item Jira link becomes a clickable
   hyperlink in the SVG.
 
-![Demo: four plan edits and their rendered schedules](docs/demo.gif)
+![Demo: four plan edits and their rendered schedules](https://raw.githubusercontent.com/meet-brad-ch/ganttuml/main/docs/demo.gif)
 
 [**▶ Open the advanced example live**](https://www.plantuml.com/plantuml/svg/fLbjRzis4FxkNq6Ws9fcS6p9JknqHT6yD6s73KtRRVqG10OZqR4MYNH9AcdQzR_lIBsHaaWbc8C04Pz7kkVkUCUpyaf8pEKrfbAEDabCKCJIFAD8BrihXCRMTPnpB1D6Ho-4l4_9ov5-o6c2hpdEqFSHGZcD6INwJuIESNJpXZDOEs4fu-Z9gVu0zWD-CUVihcJ-db1ISewdnukJMScHIKRInFF0azU7PqjD_Z5wCIbLoKIc17sOeJE2PSu9EeM7t19-Frep9Wb7VnCkm0qKx4qH-XUXDuGIy8p4A9o61-FfSZmBHkUS_KCYMOH5bCZ1E0oBa70YMCuZ8f1ww1NxsbwcE2DYD7gAnl11dmcvWN1EDYnDOdoFn0R72Rr6lo39r7M6-GqesucOo8XCebyHPKX46nBdgUAHzHh4FDCF6zLQ5YWHAZcCW_Q4eYUlpzHFGrXw2OlnT3P4c0yHzWS8GJ1428S8Yo72a9l1uG0X7F8YF70GgWIV4pxUmhw2RSNMw-VehaYuW0oNELT_dl_v7kra2Sq5kcFyHgmOBNFw_IXD8l93MO7x4JocJkA-3rpumAKJLAdtWNCVkEy1Wy07XZvmuGDzhWI77Z2S-a2Vsj2dDlG58JmOVJzcLww4zK95HbpGt0tjEo6L2nSKkY6tGfK55tJeX4AtGcUW5hv0gNrzWZbBNG5sW-uxY_YxmRaFtFU11pvmuG5L_jnWw0DzDWElJL-4L9ATOEWB0YHw15toRTKAeUDTlACnsKAF93I2CneEmHrs9PvTeWtUmh8myt9nmh8jflVeKvvbS4u2kyi3lvIDymqMfB207lRPtTNte5iO27PtBn4Mw6ArkeP9OxkQNdOd08HfZ7Hphqs3HEEErb5nfZ-J9xDZzGEoMYP4snSzPbXud8XjgW87CHKmMI0rFDawxHiUAO7qXDFqYJnM0XcMyBZC1EtC1AtCm4PPTZC35M_UyRYm1A9dDveFV4XcWalxXaTAwCcCvHDvh8J1pAWYqaURhg5J8f9hYexEt-bvDCE5FhnDLjKrcAtEGaw-v0aCmMY6L9sFB5xBxFBe-FZrQOSIJAS_0I_RfWH6SXk6MVX6mCYCBYusKcx5yyda7kRjSLIqXpqiKon4WkaU9N9o1N4GP7B-yVrlus0QN5xMtd1ocv2xmfDOBwsgfKubpg5JAJ4PeLA5eV4_WUL-x-U6zmNButjDsBSTLo4dy2s9WoOQwwy1FuC9oHCY6X4RpA630ZYS1uFgaMEpR4bb-5GvwXr1lag85NoNCWJTXgiYfCE23Af7aCso1JMPgJHPGXwMePhe5r5pR0ddS7B5x8uYIQ8DYicLB2IeorLnsISWB0KOD8Tvcs4PLwKAGv8kr4yHNgzP6gE_oXZagcwAjKA27gSw0YoQGqARqwvH2-yfKl8LA-uUt3B9ax7OaaXLusSG0d8LjyuSFEeEbliKxpUA2ufRROtFRA5WR0ipYDZKngfBRu0gajkWmMXLSHGHQ4bNIPh8UxI5zbJkq22uNnMNRjC6oRKtBKQhMZ6_GHcB2PBGFadjSWphQhdFygnnkg6vtROuhTAaad2gNnZXDFcc_wWb9C6IzfcVD-OBYjjqZTjcZJrbjuHS5x5hRnb-rootRPFItM24hndFi1fhPLvqqcgp0JIqrJJ5iz4glDC8zF1Tj08YKRv57uvW5hfDEAEgGnOYlk0Lh1KQocczewBYE4GOSBiFVEQ91AU9a0Wc4bgRB2u6R1QazamN65Zx5SnolfYTsVY1BUXZhWxxQwvAK4r7EUYhLV7S8MhUYD8SjzqAjgrMmFyOLsPwN3dA9Skm96uVSC7GjJNWYabrUzHYzULNrrKtoL0K3yfppNEBC2dTX6hxJKHC0SwKpYpx0rar67QLbI_xwk-jC8cXdUgDRqoY5AkduIjsIyhtUjRuEdvf38xcy5S1pUpLcSKgIZCDTQOZWs9Og2SN1JUpH5TPTMosZlCEL7I-ShayzwmpKEkepoNhZ2hlge-DrY5ImhgrzwWtEgzn1FGXTOEkPAgksRGkjLfrZPPFPUqQNMLyKUwDopQkDqa7DYgeKr4TShNJkwgRVMYNHDyZD4kT0NyaATGbe-KB43MZhpdxHcWp5gl_q3HVSx0qjkHJeV_dOz0iZ-4yKHjjpDRhkkRKWhus7rZUKJrElLT17qbAuAjySIElBZntzNBieZ0C1Bq683OT6sMuMcOwp6hJ3F6QYkfZzlUOqIiW5l-1-my0)
 — the public PlantUML server renders the bundled example in your browser. You install nothing.
@@ -35,6 +36,9 @@ the schema.
   As an alternative, run the `docker run … plantuml/plantuml` command from `render.sh` manually.
 
 ## Usage
+Install from PyPI (optional): `pip install ganttuml` provides the tool as the `ganttuml`
+command. A repo clone works the same without installation.
+
 `ganttuml.py` generates the `.puml` file and prints the schedule. It does not render images.
 The shell scripts render PNG and SVG. They run the `plantuml/plantuml` docker directly
 (`ganttuml.py` never starts docker).
@@ -48,11 +52,13 @@ python3 ganttuml.py --input my.json # validate + write output/<output>.puml + pr
 
 - `render.sh <source.json>` is the reusable entry point for generate + render. The per-project
   `*.sh` files are one-line wrappers around it.
-- Bare `python3 ganttuml.py` defaults to `--input example.json`.
-- A relative `--input` path resolves against the repo directory, not your current directory.
-  The commands therefore work from any directory.
+- Bare `python3 ganttuml.py` (or bare `ganttuml`) defaults to `--input example.json`.
+- A relative `--input` path resolves against your current directory. When the file is not
+  there but exists next to `ganttuml.py` (the repo), that copy is used — so the bundled
+  examples work from any directory.
 - The output filename comes from `project.output`. All artifacts go to the **`output/`**
-  subdirectory: the `.puml`, plus `.png`/`.svg`/`.cmapx` after a render.
+  subdirectory of your current directory: the `.puml`, plus `.png`/`.svg`/`.cmapx` after
+  a render.
 
 ## Claude Code skill
 The repo ships a [Claude Code](https://claude.com/claude-code) skill at
@@ -243,7 +249,7 @@ The schedule report also flags any milestone that lands on a closed day.
 - **`example.json`** — a minimal starter: two developers, a dependency, a milestone. Copy
   this file to begin your own chart. Its render:
 
-  ![Minimal example Gantt chart](docs/example.png)
+  ![Minimal example Gantt chart](https://raw.githubusercontent.com/meet-brad-ch/ganttuml/main/docs/example.png)
 
 - **`example-advanced.json`** — exercises **every** feature except `show_footer: false`.
   It contains:
@@ -256,7 +262,7 @@ The schedule report also flags any milestone that lands on a closed day.
 
   Its render (see also the live link at the top of this file):
 
-  ![Advanced example Gantt chart](docs/example-advanced.png)
+  ![Advanced example Gantt chart](https://raw.githubusercontent.com/meet-brad-ch/ganttuml/main/docs/example-advanced.png)
 
 ## Development
 The tool itself has **no runtime dependencies**. The test suite uses pytest (dev-only):
@@ -269,6 +275,8 @@ pytest --cov=ganttuml --cov-report=term-missing    # with the 100% coverage gate
   ruff lint settings (line length 100).
 - CI (GitHub Actions, `.github/workflows/ci.yml`) runs ruff and the test suite with the
   coverage gate on every push and pull request, on Python 3.10 and 3.12.
+- A published GitHub release triggers `.github/workflows/publish.yml`. That workflow
+  builds the package and uploads it to PyPI via trusted publishing (no stored tokens).
 - **Tested with:** Ubuntu 22.04 LTS, Python 3.10, pytest 8, and
   [`plantuml/plantuml:1.2026.6`](https://hub.docker.com/r/plantuml/plantuml/tags).
   `render.sh` pins this image by tag **and** digest, so renders are reproducible. To

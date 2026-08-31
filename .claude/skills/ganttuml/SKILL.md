@@ -28,8 +28,9 @@ user asks for a kind of change you haven't looked up yet.
    - Windows: `python ganttuml.py --input <plan>.json`
    - Linux/macOS: `python3 ganttuml.py --input <plan>.json`
 
-   A relative `--input` resolves against the repo directory (where `ganttuml.py` lives),
-   not the current working directory.
+   A relative `--input` resolves against the current directory first. When the file is
+   not there but exists in the repo (next to `ganttuml.py`), that copy is used. The
+   `output/` directory is created under the current directory.
 3. On error: the message is precise (JSON syntax caret + hint, the exact unknown key, the
    cycle path, …). Fix exactly what it names; rerun. Don't guess around it.
 4. On success it writes `output/<project.output>` and prints the schedule report. Relay what

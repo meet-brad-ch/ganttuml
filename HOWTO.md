@@ -8,10 +8,12 @@ regenerate:
 ./example.sh                         # generate output/example.puml + render PNG/SVG via the plantuml docker
 ./render.sh my.json                  # same, for any source (example.sh/example-advanced.sh wrap this)
 python3 ganttuml.py --input my.json  # just generate the .puml + print the schedule (no render)
+ganttuml --input my.json             # same, via the pip-installed command (pip install ganttuml)
 ```
 
 `ganttuml.py` writes only the `.puml`. The shell scripts run the `plantuml/plantuml` docker
-to render. All artifacts go to the **`output/`** subdirectory (kept out of git).
+to render. All artifacts go to the **`output/`** subdirectory of your current directory
+(kept out of git).
 
 The generator never hard-codes dates. It emits dependencies, and PlantUML computes the
 schedule. A duration (`days`) counts only that developer's working days. Weekends, holidays,

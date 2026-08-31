@@ -10,3 +10,8 @@ __pycache__/
 .coverage
 .mypy_cache/
 .ruff_cache/
+
+# Packaging artifacts (python -m build)
+dist/
+build/
+*.egg-info/

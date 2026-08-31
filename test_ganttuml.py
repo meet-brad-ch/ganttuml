@@ -706,15 +706,13 @@ def test_report_today_outside_and_no_makespan(frozen_today, capsys):
 def test_main_ok(tmp_path, monkeypatch, capsys):
     src = with_item(task("t"))
     src["project"]["output"] = "pytest-main.puml"
-    f = tmp_path / "ok.json"
-    f.write_text(json.dumps(src))
-    monkeypatch.setattr(sys, "argv", ["ganttuml.py", "--input", str(f)])
+    (tmp_path / "ok.json").write_text(json.dumps(src))
+    monkeypatch.chdir(tmp_path)  # relative --input resolves against the CWD
+    monkeypatch.setattr(sys, "argv", ["ganttuml.py", "--input", "ok.json"])
     ganttuml.main()
     out = capsys.readouterr().out
     assert "wrote " in out and "pytest-main.puml" in out and "render to PNG/SVG" in out
-    written = GANTT_DIR / "output" / "pytest-main.puml"
-    assert written.exists()
-    written.unlink()
+    assert (tmp_path / "output" / "pytest-main.puml").exists()
 
 
 def test_main_error_exits_cleanly(tmp_path, monkeypatch):
@@ -726,10 +724,12 @@ def test_main_error_exits_cleanly(tmp_path, monkeypatch):
     assert "error: project.start is required" in str(ei.value)
 
 
-def test_main_default_input_is_example(monkeypatch, capsys):
+def test_main_default_input_is_example(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)  # example.json is not in the CWD -> repo-dir fallback
     monkeypatch.setattr(sys, "argv", ["ganttuml.py"])
     ganttuml.main()
     assert "wrote " in capsys.readouterr().out
+    assert (tmp_path / "output" / "example.puml").exists()
 
 
 def test_cli_subprocess_no_traceback(tmp_path):

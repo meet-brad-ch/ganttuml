@@ -1,3 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ganttuml"
+version = "1.0.0"
+description = "JSON in, Gantt out - a single-file, stdlib-only PlantUML Gantt generator with per-developer calendars, dependencies, and critical-path highlighting."
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+authors = [{ name = "Brad Chamberlain" }]
+keywords = ["gantt", "gantt-chart", "plantuml", "project-management", "diagrams-as-code", "scheduling"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Scheduling",
+]
+
+[project.urls]
+Homepage = "https://github.com/meet-brad-ch/ganttuml"
+Repository = "https://github.com/meet-brad-ch/ganttuml"
+Issues = "https://github.com/meet-brad-ch/ganttuml/issues"
+
+[project.scripts]
+ganttuml = "ganttuml:main"
+
+[tool.setuptools]
+py-modules = ["ganttuml"]
+
 [tool.ruff]
 line-length = 100
 

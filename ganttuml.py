@@ -894,8 +894,10 @@ def main() -> None:
     ap.add_argument("--input", default="example.json", help="source JSON (default example.json)")
     args = ap.parse_args()
 
+    # Resolve a relative --input against the CWD (the installed-CLI convention); fall
+    # back to the script's own directory so bare runs keep finding the bundled examples.
     in_path = Path(args.input)
-    if not in_path.is_absolute():
+    if not in_path.is_absolute() and not in_path.exists() and (HERE / in_path).exists():
         in_path = HERE / in_path
     try:
         src = load(in_path)
@@ -903,7 +905,7 @@ def main() -> None:
     except SourceError as e:
         sys.exit(f"error: {e}")
 
-    out_dir = HERE / "output"
+    out_dir = Path("output")  # under the CWD; render.sh cd's to the repo first
     out_dir.mkdir(exist_ok=True)
     out = out_dir / src["project"].get("output", "example.puml")
     out.write_text(emit(src), encoding="utf-8")
