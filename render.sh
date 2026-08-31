@@ -13,6 +13,9 @@ src="${1:?usage: render.sh <source.json>}"
 # https://hub.docker.com/r/plantuml/plantuml/tags and re-check the rendered examples.
 # To track the newest release instead (renders may change between runs), use:
 #   plantuml_image="plantuml/plantuml:latest"
+# Upgrade note: 1.2026.7+ draws a task table (Start/End/Duration columns) by default.
+# Before an upgrade, decide on it: "hide column start/end/duration" removes it, and the
+# Phases band needs a re-check (its three items per row overprint one table row).
 plantuml_image="plantuml/plantuml:1.2026.6@sha256:47870c1f76cfb3747bc7090bfe83013a4e3105b5a0bb1515e2baf5d3e2b3ee9d"
 
 # Run the generator and keep its schedule report visible. Its stdout is captured so

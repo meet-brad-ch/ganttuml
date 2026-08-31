@@ -43,7 +43,7 @@ class SourceError(Exception):
 # --------------------------------------------------------------------------- load
 def load(path: Path) -> dict:
     try:
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
     except FileNotFoundError:
         raise SourceError(f"input file not found: {path}") from None
     try:
@@ -906,7 +906,7 @@ def main() -> None:
     out_dir = HERE / "output"
     out_dir.mkdir(exist_ok=True)
     out = out_dir / src["project"].get("output", "example.puml")
-    out.write_text(emit(src))
+    out.write_text(emit(src), encoding="utf-8")
     print(f"wrote {out}")
     report(src)
     print("(render to PNG/SVG with the plantuml docker, e.g. ./example.sh)")
